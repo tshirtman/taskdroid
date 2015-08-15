@@ -1,0 +1,30 @@
+<OutputLabel@Label>:
+    size_hint_y: None
+    height: '24dp'
+    halign: 'left'
+
+BoxLayout:
+    orientation: 'vertical'
+    Label:
+        text: 'Task'
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    BoxLayout:
+        size_hint_y: None
+        height: '48dp'
+        TextInput:
+            multiline: False
+            disabled: app.lock
+
+            on_text_validate:
+                app._run_task(self.text)
+                self.text = ''
+        Button:
+            size_hint_x: None
+            width: '48dp'
+            on_press: app.output = []
+
+    RecycleView:
+        data: app.output
+        viewclass: 'OutputLabel'
