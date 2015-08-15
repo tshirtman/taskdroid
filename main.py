@@ -41,13 +41,15 @@ class TaskDroid(App):
         #p = Popen([TASK] + split(args), stdout=PIPE)
         self.output.append({'text': '_' * 80})
         self.output.append({'text': args})
-
-        p = Popen(split(args), stdout=PIPE, stderr=PIPE)
-        for l in p.stdout.readlines():
-            self.output.append({'text': l})
-        for l in p.stderr.readlines():
-            self.output.append({'text': l})
-        self.lock = False
+        try:
+            p = Popen(split(args), stdout=PIPE, stderr=PIPE)
+            for l in p.stdout.readlines():
+                self.output.append({'text': l})
+            for l in p.stderr.readlines():
+                self.output.append({'text': l})
+            self.lock = False
+        except OSError:
+            self.output.append({'text': "command failed"})
 
 if __name__ == '__main__':
     app = TaskDroid()
