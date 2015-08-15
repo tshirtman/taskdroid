@@ -1,0 +1,7 @@
+requires the `task` binary, as produced by the `task_recipes` branch of
+python-for-android, copied into the app dir.
+
+allow to run commands (including task commands) from a very simple kivy app.
+
+Not functionnal yet, as the `task` recipe of python-for-android is not
+producing a working binary yet.
