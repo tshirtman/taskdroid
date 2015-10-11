@@ -84,7 +84,7 @@ android.permissions = INTERNET
 #android.sdk_path =
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
-android.p4a_dir = /home/build/p4a/
+#android.p4a_dir = /home/build/p4a/
 
 # (list) python-for-android whitelist
 #android.p4a_whitelist =
@@ -104,8 +104,7 @@ android.p4a_dir = /home/build/p4a/
 
 # (str) python-for-android branch to use, if not master, useful to try
 # not yet merged features.
-#android.branch = 80f31111839bbb43d7343ff98772af83b477d641
-#android.branch = recipes_task
+android.branch = recipes_task
 
 # (str) OUYA Console category. Should be one of GAME or APP
 # If you leave this blank, OUYA support will not be enabled
