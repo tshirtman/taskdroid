@@ -4,6 +4,7 @@ __version__ = '0.1'
 from shlex import split
 from subprocess import Popen, PIPE
 from threading import Thread
+from os import environ
 
 from kivy.app import App
 from kivy.properties import BooleanProperty, ListProperty
@@ -13,6 +14,8 @@ if platform == 'android':
     TASK = './task'
 else:
     TASK = 'task'
+
+environ['LD_LIBRARY_PATH'] = 'libs/android/'
 
 # register garden.recycleview
 from kivy.garden.recycleview import RecycleView  # noqa
@@ -42,7 +45,8 @@ class TaskDroid(App):
         self.output.append({'text': '_' * 80})
         self.output.append({'text': args})
         try:
-            p = Popen(split(args), stdout=PIPE, stderr=PIPE)
+            p = Popen([TASK, 'rc:/sdcard/taskrc'] + split(args),
+                      stdout=PIPE, stderr=PIPE)
             for l in p.stdout.readlines():
                 self.output.append({'text': l})
             for l in p.stderr.readlines():
@@ -50,6 +54,10 @@ class TaskDroid(App):
             self.lock = False
         except OSError:
             self.output.append({'text': "command failed"})
+
+    def on_pause(self):
+        return True
+
 
 if __name__ == '__main__':
     app = TaskDroid()

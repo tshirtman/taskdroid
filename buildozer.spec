@@ -13,7 +13,7 @@ package.domain = fr.tshirtman
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,task
+source.include_exts = py,png,jpg,kv,atlas,task,so
 
 # (list) Source files to exclude (let empty to not exclude anything)
 #source.exclude_exts = spec
@@ -60,7 +60,7 @@ fullscreen = 0
 #
 
 # (list) Permissions
-#android.permissions = INTERNET
+android.permissions = INTERNET
 
 # (int) Android API to use
 #android.api = 14
@@ -118,7 +118,9 @@ android.p4a_dir = /home/build/p4a/
 #android.manifest.intent_filters =
 
 # (list) Android additionnal libraries to copy into libs/armeabi
-#android.add_libs_armeabi = libs/android/*.so
+[android.add_libs_armeabi]
+libs/android/*.so
+
 #android.add_libs_armeabi_v7a = libs/android-v7/*.so
 #android.add_libs_x86 = libs/android-x86/*.so
 #android.add_libs_mips = libs/android-mips/*.so
