@@ -1,59 +1,49 @@
 # coding: utf-8
-__version__ = '0.1'
-
-from shlex import split
-from subprocess import Popen, PIPE
-from threading import Thread
 from os import environ
+from subprocess import Popen
+from os.path import expanduser
 
 from kivy.app import App
-from kivy.properties import BooleanProperty, ListProperty
+from kivy.properties import ListProperty
 from kivy.utils import platform
 
-if platform == 'android':
-    TASK = './task'
-else:
-    TASK = 'task'
+from tasklib.backends import TaskWarrior
+from tasklib.filters import TaskWarriorFilter
 
-environ['LD_LIBRARY_PATH'] = 'libs/android/'
+__version__ = '0.1'
+
+
+if platform == 'android':
+    Popen(['chmod', '755', 'task'])
+    Popen(['ls', '-l'])
+    environ['LD_LIBRARY_PATH'] = 'libs/android/'
+    environ['PATH'] += ':.'
+
+    TW = TaskWarrior(taskrc_location='/sdcard/taskrc')
+else:
+    TW = TaskWarrior(taskrc_location=expanduser('~/.task/taskrc'))
+
 
 # register garden.recycleview
 from kivy.garden.recycleview import RecycleView  # noqa
 
 
 class TaskDroid(App):
-    lock = BooleanProperty(False)
-    output = ListProperty([])
+    filters = ListProperty()
+    tasks = ListProperty()
 
     def build(self):
         super(TaskDroid, self).build()
-        for i in range(10):
-            print "!" * 30 + " START " + "!" * 30
-        print "chmod"
-        Popen(['chmod', '755', 'task'])
-        Popen(['ls', '-l'])
-        print "done"
+        self.refresh_tasks()
 
-    def run_task(self, args):
-        if self.lock:
-            return
-        Thread(target=self._run_task, args=[args]).start()
+    def refresh_tasks(self, *args):
+        F = TaskWarriorFilter(TW)
+        for f in self.filters:
+            F.add_filter_param(*f)
 
-    def _run_task(self, args):
-        self.lock = True
-        #p = Popen([TASK] + split(args), stdout=PIPE)
-        self.output.append({'text': '_' * 80})
-        self.output.append({'text': args})
-        try:
-            p = Popen([TASK, 'rc:/sdcard/taskrc'] + split(args),
-                      stdout=PIPE, stderr=PIPE)
-            for l in p.stdout.readlines():
-                self.output.append({'text': l})
-            for l in p.stderr.readlines():
-                self.output.append({'text': l})
-            self.lock = False
-        except OSError:
-            self.output.append({'text': "command failed"})
+        self.tasks = []
+        for t in TW.filter_tasks(F):
+            self.tasks.append({'text': str(t), 'task': t})
 
     def on_pause(self):
         return True

@@ -1,8 +1,3 @@
-<OutputLabel@Label>:
-    size_hint_y: None
-    height: '24dp'
-    halign: 'left'
-
 BoxLayout:
     orientation: 'vertical'
     Label:
@@ -15,16 +10,18 @@ BoxLayout:
         height: '48dp'
         TextInput:
             multiline: False
-            disabled: app.lock
 
             on_text_validate:
                 app._run_task(self.text)
-                self.text = ''
+                #self.text = ''
         Button:
             size_hint_x: None
             width: '48dp'
             on_press: app.output = []
 
     RecycleView:
-        data: app.output
-        viewclass: 'OutputLabel'
+        data: app.tasks
+        viewclass: 'TaskListItem'
+
+
+<TaskListItem@Button>:
