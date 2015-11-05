@@ -43,7 +43,11 @@ class TaskDroid(App):
 
         self.tasks = []
         for t in TW.filter_tasks(F):
-            self.tasks.append({'text': str(t), 'task': t})
+            self.tasks.append({
+                'text': 'proj:{p}, tags:{t}, {s}'.format(
+                    p=t['project'], t=t['tags'], s=str(t)),
+                'task': t
+                })
 
     def on_pause(self):
         return True
